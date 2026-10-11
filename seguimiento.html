@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seguimiento de pedido | Proinvi</title>
+<meta name="description" content="Consulta el estado de tu pedido con tu folio.">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Sora:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="seguimiento">
+
+<div class="page-h"><div class="wrap"><h1>Seguimiento de pedido</h1></div></div>
+<section style="padding-top:30px">
+  <div class="wrap">
+    <div class="track rv">
+      <h2>¿En qué etapa va tu orden?</h2>
+      <p style="color:var(--muted);margin-top:6px">Ingresa el folio que recibiste al generar tu orden de compra.</p>
+      <form class="trackform" id="trackForm">
+        <input id="folioIn" placeholder="Ej. OC-20261011-1234" required>
+        <button class="btn p" type="submit">Consultar</button>
+      </form>
+      <p id="trackMsg">Para probar, usa el folio de una orden recién creada o escribe DEMO.</p>
+      <div class="stepper"><div class="st">Recibido</div><div class="st">En preparación</div><div class="st">Enviado</div><div class="st">Entregado</div></div>
+    </div>
+  </div>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>
