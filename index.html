@@ -16,18 +16,20 @@
   <div class="pipes"></div><div class="blob b1"></div><div class="blob b2"></div>
   <div class="wrap">
     <div>
-      <span class="tag"><i></i> Pedidos en línea disponibles 24/7</span>
+      <span class="tag" data-store><i></i> Pedidos en línea disponibles 24/7</span><span class="tag" data-nostore><i></i> Distribuidores de tubería, válvulas y conexiones</span>
       <h1>Tuberías, válvulas y conexiones, <em>a un clic</em> de distancia.</h1>
-      <p>Somos Proveedora Industrial Virgo. Consulta el catálogo, arma tu orden de compra y da seguimiento a tu pedido sin llamadas ni esperas.</p>
+      <p data-store>Somos Proveedora Industrial Virgo. Consulta el catálogo, arma tu orden de compra y da seguimiento a tu pedido sin llamadas ni esperas.</p><p data-nostore>Somos Proveedora Industrial Virgo. Conoce nuestras líneas de producto y solicita tu cotización sin costo ni compromiso.</p>
       <div class="cta">
-        <a href="catalogo.html" class="btn p">Ver catálogo</a>
-        <a href="seguimiento.html" class="btn g">Rastrear pedido</a>
+        <a href="catalogo.html" class="btn p">Ver productos</a>
+        <a href="seguimiento.html" class="btn g" data-store>Rastrear pedido</a><a href="contacto.html" class="btn g" data-nostore>Solicitar cotización</a>
       </div>
     </div>
     <div class="stats">
       <div class="stat rv"><strong data-n="12">0</strong><strong>+</strong><br><span>Líneas de producto</span></div>
-      <div class="stat rv"><strong data-n="24">0</strong><strong>h</strong><br><span>Pedidos en línea</span></div>
-      <div class="stat rv"><strong data-n="100">0</strong><strong>%</strong><br><span>Seguimiento de tu orden</span></div>
+      <div class="stat rv" data-store><strong data-n="24">0</strong><strong>h</strong><br><span>Pedidos en línea</span></div>
+      <div class="stat rv" data-store><strong data-n="100">0</strong><strong>%</strong><br><span>Seguimiento de tu orden</span></div>
+      <div class="stat rv" data-nostore><strong>✓</strong><br><span>Cotización sin costo ni compromiso</span></div>
+      <div class="stat rv" data-nostore><strong>✓</strong><br><span>Atención personalizada</span></div>
     </div>
   </div>
 </div>
@@ -39,7 +41,7 @@
 
 <section>
   <div class="wrap">
-    <div class="sec-h rv"><div><h2>Nuestros productos</h2><p>Elige una línea para ver el catálogo completo.</p></div></div>
+    <div class="sec-h rv"><div><h2>Nuestros productos</h2><p>Elige una línea para ver los productos.</p></div></div>
     <div class="cats" id="cats"></div>
   </div>
 </section>
@@ -56,7 +58,11 @@
         <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 14 24 6l18 8v20L24 42 6 34z"/><path d="m6 14 18 8 18-8M24 22v20"/></svg>
         <h3>Entrega acelerada</h3><p>Nos aseguramos de que la entrega se realice de acuerdo con las condiciones establecidas en la compra.</p>
       </div>
-      <div class="feat rv">
+      <div class="feat rv" data-nostore>
+        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="24" cy="18" r="8"/><path d="M8 42c2-9 9-13 16-13s14 4 16 13"/></svg>
+        <h3>Atención personalizada</h3><p>Te asesoramos para elegir el material, la medida y la conexión correctos para tu proyecto.</p>
+      </div>
+      <div class="feat rv" data-store>
         <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="6" y="8" width="36" height="28" rx="4"/><path d="M6 16h36M14 44h20M24 36v8"/><path d="m16 26 5 5 11-11"/></svg>
         <h3>Compra en línea</h3><p>Genera tu orden de compra y consulta el estado de tu pedido en cualquier momento con tu folio.</p>
       </div>
@@ -64,7 +70,7 @@
   </div>
 </section>
 
-<section>
+<section data-store>
   <div class="wrap">
     <div class="sec-h rv"><div><h2>Comprar es así de fácil</h2></div></div>
     <div class="steps">

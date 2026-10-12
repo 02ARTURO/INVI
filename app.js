@@ -2,6 +2,7 @@
    Cuando el flujo de n8n esté listo, pega aquí las URLs de los webhooks.
    Mientras estén vacías, el sitio funciona en modo demo con datos de ejemplo. */
 const CONFIG = {
+  TIENDA: false,     // FASE 1: false = sitio informativo con cotización. FASE 2: true = carrito, órdenes y seguimiento.
   PRODUCTS_URL: "",  // GET  -> [{id,sku,name,cat,price,desc,stock}]
   ORDER_URL:    "",  // POST -> {folio,cliente,items,total,pago,factura}
   TRACK_URL:    "",  // GET  ?folio=XXX -> {estado: 0..3}
@@ -61,7 +62,7 @@ function toast(t){ const el=$("#toast"); el.textContent=t; el.classList.add("on"
 
 /* ===================== ESTRUCTURA COMÚN ===================== */
 const PAGE = document.body.dataset.page || "inicio";
-const NAV = [["inicio","index.html","Inicio"],["quienes","quienes-somos.html","Quiénes somos"],["catalogo","catalogo.html","Catálogo"],["seguimiento","seguimiento.html","Seguimiento"],["contacto","contacto.html","Contacto"]];
+const NAV = [["inicio","index.html","Inicio"],["quienes","quienes-somos.html","Quiénes somos"],["catalogo","catalogo.html",CONFIG.TIENDA?"Tienda":"Productos"],...(CONFIG.TIENDA?[["seguimiento","seguimiento.html","Seguimiento"]]:[]),["contacto","contacto.html","Contacto"]];
 function buildShell(){
   const logo = `<img src="assets/logo.svg" alt="Logo Proveedora Industrial Virgo">`;
   document.body.insertAdjacentHTML("afterbegin",`
@@ -70,35 +71,10 @@ function buildShell(){
     <a href="index.html" class="brand"><span class="lg">${logo}</span><span><b>${E.corto}</b><small>Proveedora Industrial Virgo</small></span></a>
     <ul id="menu">${NAV.map(n=>`<li><a href="${n[1]}" class="${n[0]===PAGE?'on':''}">${n[2]}</a></li>`).join("")}</ul>
     <div style="display:flex;gap:10px;align-items:center">
-      <button class="cart-btn" id="openCart">Carrito <b id="cartCount">0</b></button>
+      ${CONFIG.TIENDA?'<button class="cart-btn" id="openCart">Carrito <b id="cartCount">0</b></button>':''}
       <button class="burger" id="burger" aria-label="Menú">☰</button>
     </div>
   </div></header>`);
-  document.body.insertAdjacentHTML("afterbegin",`<div class="scroll-progress" aria-hidden="true"><span></span></div>`);
-  const progress = $(".scroll-progress span");
-  let progressFrame = 0;
-  const updateProgress = () => {
-    if(progressFrame) return;
-    progressFrame = requestAnimationFrame(() => {
-      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-      progress.style.transform = `scaleX(${scrollable > 0 ? window.scrollY / scrollable : 0})`;
-      progressFrame = 0;
-    });
-  };
-  window.addEventListener("scroll",updateProgress,{passive:true});
-  updateProgress();
-  if(PAGE === "inicio" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
-    const glow = $("#glow");
-    let pointerFrame = 0;
-    document.addEventListener("pointermove",e=>{
-      if(e.pointerType !== "mouse" || pointerFrame) return;
-      pointerFrame = requestAnimationFrame(()=>{
-        glow.style.left = `${e.clientX}px`;
-        glow.style.top = `${e.clientY}px`;
-        pointerFrame = 0;
-      });
-    },{passive:true});
-  }
   document.body.insertAdjacentHTML("beforeend",`
   <footer><div class="wrap">
     <div class="fgrid">
@@ -108,17 +84,17 @@ function buildShell(){
     </div>
     <div class="copy">© ${new Date().getFullYear()} ${E.nombre}. Todos los derechos reservados. · Sitio de muestra con datos de ejemplo.</div>
   </div></footer>
-  <div class="veil" id="veil"></div>
+  ${CONFIG.TIENDA?`<div class="veil" id="veil"></div>
   <aside class="drawer" id="drawer">
     <div class="dh"><h3>Tu carrito</h3><button id="closeCart" aria-label="Cerrar">✕</button></div>
     <div class="items" id="items"></div>
     <div class="df"><div class="tot"><span>Total</span><span id="total">$0.00</span></div>
-    <button class="btn p" id="checkout">Generar orden de compra</button>
-    <button class="clear-cart" id="clearCart" type="button" disabled>Vaciar carrito</button></div>
+    <button class="btn p" id="checkout">Generar orden de compra</button></div>
   </aside>
-  <div class="modal" id="modal"><div class="mbox" id="mbox"></div></div>
+  <div class="modal" id="modal"><div class="mbox" id="mbox"></div></div>`:''}
   <div class="toast" id="toast"></div>`);
   $("#burger").onclick = () => $("#menu").classList.toggle("open");
+  document.addEventListener("pointermove",e=>{ const g=$("#glow"); g.style.left=e.clientX+"px"; g.style.top=e.clientY+"px"; });
 }
 
 /* ===================== CARRITO ===================== */
@@ -129,9 +105,9 @@ function addToCart(id){
 }
 function cartRows(){ return cart.map(c=>({...PRODUCTS.find(p=>p.id===c.id), qty:c.qty})).filter(r=>r.id); }
 function renderCart(){
+  if(!CONFIG.TIENDA) return;
   const rows = cartRows();
   $("#cartCount").textContent = rows.reduce((s,r)=>s+r.qty,0);
-  $("#clearCart").disabled = rows.length === 0;
   $("#items").innerHTML = rows.length ? rows.map(r=>`
     <div class="it"><div><strong>${r.name}</strong><br><small>${r.sku} · ${money(r.price)}</small>
       <div class="qty"><button data-m="${r.id}">−</button><span>${r.qty}</span><button data-p="${r.id}">+</button></div></div>
@@ -140,6 +116,7 @@ function renderCart(){
   $("#total").textContent = money(rows.reduce((s,r)=>s+r.price*r.qty,0));
 }
 function wireCart(){
+  if(!CONFIG.TIENDA) return;
   $("#items").addEventListener("click",e=>{
     const m=+e.target.dataset.m, p=+e.target.dataset.p;
     if(p){ cart.find(i=>i.id===p).qty++; }
@@ -149,14 +126,6 @@ function wireCart(){
   const toggle = on => { $("#drawer").classList.toggle("on",on); $("#veil").classList.toggle("on",on); };
   $("#openCart").onclick = () => toggle(true);
   $("#closeCart").onclick = $("#veil").onclick = () => toggle(false);
-  $("#clearCart").onclick = () => {
-    if(!cart.length) return;
-    if(!window.confirm("¿Vaciar el carrito y quitar todos los productos?")) return;
-    cart = [];
-    saveCart();
-    renderCart();
-    toast("Carrito vaciado");
-  };
   $("#checkout").onclick = () => { if(!cart.length) return toast("Agrega productos primero"); toggle(false); openOrderForm(); };
 }
 
@@ -205,12 +174,11 @@ function initCatalogo(){
   const chips = () => $("#chips").innerHTML = ["Todos",...new Set(PRODUCTS.map(p=>p.cat))].map(c=>`<button class="chip ${c===cat?'on':''}" data-c="${c}">${c}</button>`).join("");
   const grid = () => {
     const list = PRODUCTS.filter(p=>(cat==="Todos"||p.cat===cat)&&(p.name+p.sku+p.cat).toLowerCase().includes(term.toLowerCase()));
-    $("#grid").innerHTML = list.length ? list.map((p,i)=>`
-      <article class="prod rv" style="--card-delay:${Math.min(i,7)*55}ms"><div class="thumb"><span class="badge">${p.stock<=10?'Últimas piezas':'En existencia'}</span>${iconOf(p.cat)}</div>
+    $("#grid").innerHTML = list.length ? list.map(p=>`
+      <article class="prod"><div class="thumb">${CONFIG.TIENDA?`<span class="badge">${p.stock<=10?'Últimas piezas':'En existencia'}</span>`:''}${iconOf(p.cat)}</div>
       <div class="pbody"><small>${p.sku} · ${p.cat}</small><h3>${p.name}</h3>
-      <div class="pfoot"><span class="price">${money(p.price)}</span><button class="add" data-id="${p.id}">Agregar</button></div></div></article>`).join("")
+      <div class="pfoot">${CONFIG.TIENDA?`<span class="price">${money(p.price)}</span><button class="add" data-id="${p.id}">Agregar</button>`:`<span style="color:var(--muted);font-size:.85rem">Precio bajo cotización</span><a class="add" href="contacto.html?producto=${encodeURIComponent(p.sku+' - '+p.name)}">Cotizar</a>`}</div></div></article>`).join("")
       : `<div class="empty">No encontramos productos con esa búsqueda.</div>`;
-    document.querySelectorAll("#grid .prod.rv").forEach(el=>io.observe(el));
   };
   chips(); grid();
   $("#chips").onclick = e => { const c=e.target.dataset.c; if(c){cat=c;chips();grid();} };
@@ -222,6 +190,7 @@ function initInicio(){
     <a class="cat rv" href="catalogo.html?cat=${encodeURIComponent(c[0])}"><div class="ic">${ICONS[c[1]]}</div><h3>${c[0]}</h3><span class="more">DETALLES</span></a>`).join("");
 }
 function initSeguimiento(){
+  if(!CONFIG.TIENDA){ location.replace('index.html'); return; }
   const paint = n => document.querySelectorAll(".st").forEach((el,i)=>el.classList.toggle("done",i<=n));
   const run = async folio => {
     let estado = null;
@@ -237,6 +206,8 @@ function initSeguimiento(){
   if(f){ $("#folioIn").value=f; run(f); }
 }
 function initContacto(){
+  const pr = new URLSearchParams(location.search).get('producto');
+  if(pr) document.querySelector('#cform textarea').value = 'Hola, quisiera cotizar: ' + pr + '\nCantidad: ';
   const m = $("#cmap"); if(m) m.innerHTML = "Aquí va el mapa de Google<br>(cuando se defina la dirección)";
   $("#cform").onsubmit = async e => {
     e.preventDefault();
@@ -266,6 +237,7 @@ const io = new IntersectionObserver(es=>es.forEach(en=>{
     try{ const r=await fetch(CONFIG.PRODUCTS_URL); PRODUCTS = await r.json(); }catch(e){ console.warn("Usando productos de ejemplo"); }
   }
   buildShell(); wireCart(); renderCart();
+  document.querySelectorAll(CONFIG.TIENDA?'[data-nostore]':'[data-store]').forEach(el=>el.remove());
   ({inicio:initInicio,catalogo:initCatalogo,seguimiento:initSeguimiento,contacto:initContacto}[PAGE]||(()=>{}))();
   document.querySelectorAll(".rv").forEach(el=>io.observe(el));
 })();
