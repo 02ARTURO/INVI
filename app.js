@@ -12,7 +12,9 @@ var pend=function(v){return v?esc(v):'<span class="pend">Por definir</span>'};
 function shell(){
   var nav=[['index.html','Inicio','inicio'],['index.html#productos','Productos',''],['quienes-somos.html','Nosotros','nosotros'],['tienda.html','Tienda','tienda',1],['contacto.html','Contacto','contacto']];
   var h='<header class="hdr" id="hdr"><div class="wrap"><a class="logo" href="index.html" aria-label="Proinvi inicio"><img src="images/logo-blanco.svg" alt="Proinvi" width="68" height="58"></a>'+
-   '<nav class="nav" id="nav">'+nav.map(function(n){return'<a href="'+n[0]+'"'+(n[3]?' data-tienda':'')+(n[2]&&n[2]===page?' class="on"':'')+'>'+n[1]+'</a>'}).join('')+
+   '<nav class="nav" id="nav">'+nav.map(function(n){
+     if(n[1]==='Productos')return'<div class="dd'+(page==='producto'?' on':'')+'"><a href="'+n[0]+'" class="ddl">Productos</a><button class="ddb" type="button" aria-label="Ver líneas de producto" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="ddm">'+CATS.map(function(c){return'<a href="producto.html?c='+c.slug+'"><img src="'+c.cover+'" alt="" loading="lazy"><span>'+esc(c.name)+'</span></a>'}).join('')+'<a class="all" href="index.html#productos">Ver todas las líneas →</a></div></div>';
+     return'<a href="'+n[0]+'"'+(n[3]?' data-tienda':'')+(n[2]&&n[2]===page?' class="on"':'')+'>'+n[1]+'</a>'}).join('')+
    '<a class="cta" data-sin-tienda href="contacto.html">Solicitar cotización</a>'+
    '<button class="cartbtn" data-tienda id="cartbtn" type="button" aria-label="Abrir carrito">Carrito<b id="cartn">0</b></button></nav>'+
    '<button class="burger" id="burger" aria-label="Menú"><span></span><span></span><span></span></button></div></header>';
@@ -27,6 +29,10 @@ function shell(){
   var onS=function(){hdr.classList.toggle('sc',scrollY>30)};addEventListener('scroll',onS,{passive:true});onS();
   bg.addEventListener('click',function(){bg.classList.toggle('on');nv.classList.toggle('on')});
   $$('a',nv).forEach(function(a){a.addEventListener('click',function(){bg.classList.remove('on');nv.classList.remove('on')})});
+  var dd=$('.dd',nv),db=$('.ddb',nv);
+  db.addEventListener('click',function(e){e.stopPropagation();var o=dd.classList.toggle('open');db.setAttribute('aria-expanded',o)});
+  D.addEventListener('click',function(e){if(!dd.contains(e.target)){dd.classList.remove('open');db.setAttribute('aria-expanded','false')}});
+  dd.addEventListener('keydown',function(e){if(e.key==='Escape'){dd.classList.remove('open');db.focus()}});
   if(matchMedia('(hover:hover)').matches)addEventListener('pointermove',function(e){var g=$('#glow');g.style.setProperty('--mx',e.clientX+'px');g.style.setProperty('--my',(e.clientY)+'px')},{passive:true});
 }
 
