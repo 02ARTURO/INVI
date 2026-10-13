@@ -98,7 +98,16 @@ function contacto(){
     var show=function(t,m){out.className='note '+t;out.textContent=m};
     if(!P.CONTACT_URL){show('warn','Modo demostración: este formulario todavía no está conectado a un servicio de envío, por lo que tu mensaje NO fue enviado.');return}
     var btn=$('button[type=submit]',f);btn.disabled=true;
-    fetch(P.CONTACT_URL,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(d)}).then(function(r){return r.json().then(function(j){if(!r.ok||j.success===false||j.success==='false')throw 0;return j})}).then(function(){show('ok','¡Gracias! Recibimos tu solicitud y te contactaremos pronto.');f.reset()}).catch(function(){show('err','No pudimos enviar tu mensaje. Inténtalo de nuevo en unos minutos.')}).then(function(){btn.disabled=false});
+    fetch(P.CONTACT_URL,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(d)}).then(function(r){
+      return r.json().then(function(j){
+        if(!r.ok)throw new Error('El servicio respondió con el error '+r.status+'.');
+        if(j.success!==true&&j.success!=='true')throw new Error(j.message||'El servicio no confirmó el envío.');
+        return j;
+      });
+    }).then(function(){show('ok','¡Gracias! Recibimos tu solicitud y te contactaremos pronto.');f.reset()}).catch(function(err){
+      var msg=err instanceof TypeError?'No se pudo conectar con el servicio de envío. Revisa la conexión e inténtalo de nuevo.':'El servicio no aceptó el mensaje ('+err.message+'). Si es el primer envío, Daniel debe confirmar el correo de activación de FormSubmit.';
+      show('err',msg);
+    }).then(function(){btn.disabled=false});
   });
 }
 
