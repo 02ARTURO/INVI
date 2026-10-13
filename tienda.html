@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tienda en línea | Proinvi</title>
+<meta name="description" content="Tienda en línea de Proinvi: catálogo, orden de compra y seguimiento de pedidos.">
+<meta name="theme-color" content="#05070d">
+<link rel="icon" href="images/logo-proinvi.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="config.js"></script>
+</head>
+<body data-page="tienda">
+
+<main>
+<script>if(window.PROINVI&&!window.PROINVI.TIENDA)location.replace('index.html');</script>
+<section class="phero"><div class="wrap"><div class="crumb"><a href="index.html">Inicio</a> / Tienda</div><div class="eyebrow">Tienda en línea</div><h1>Compra en línea</h1><p>Arma tu orden de compra y da seguimiento a tu pedido.</p></div></section>
+<section class="sec" style="padding-top:30px"><div class="wrap">
+  <div id="dm"></div>
+  <div class="tools"><input id="q" type="search" placeholder="Buscar por nombre o SKU…" aria-label="Buscar"><select id="cs" aria-label="Línea"></select></div>
+  <div class="pg" id="pg"></div>
+</div></section>
+<section class="sec" id="seguimiento" style="padding-top:20px"><div class="wrap"><div class="box">
+  <div class="eyebrow">Seguimiento</div><h2 style="font-size:2rem;margin-bottom:20px">Rastrea tu pedido</h2>
+  <form class="form" id="tf" style="grid-template-columns:1fr auto;max-width:560px"><input id="fo" placeholder="Folio de tu orden" required aria-label="Folio"><button class="btn p" type="submit">Consultar</button></form>
+  <div id="tr"></div>
+</div></div></section>
+</main>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
