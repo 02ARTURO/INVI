@@ -94,11 +94,11 @@ function contacto(){
   $('#ci').innerHTML=[['Teléfono',E.telefono],['Correo',E.email],['Dirección',E.direccion],['Horario',E.horario]].map(function(r){return'<div class="it"><div><small>'+r[0]+'</small>'+pend(r[1])+'</div></div>'}).join('');
   f.addEventListener('submit',function(e){
     e.preventDefault();var out=$('#cmsg'),d={};new FormData(f).forEach(function(v,k){d[k]=v});
-    if(d.web){return} /* honeypot */
+    if(d._honey){return} /* honeypot */
     var show=function(t,m){out.className='note '+t;out.textContent=m};
     if(!P.CONTACT_URL){show('warn','Modo demostración: este formulario todavía no está conectado a un servicio de envío, por lo que tu mensaje NO fue enviado.');return}
     var btn=$('button[type=submit]',f);btn.disabled=true;
-    fetch(P.CONTACT_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}).then(function(r){if(!r.ok)throw 0;show('ok','¡Gracias! Recibimos tu solicitud y te contactaremos pronto.');f.reset()}).catch(function(){show('err','No pudimos enviar tu mensaje. Inténtalo de nuevo en unos minutos.')}).then(function(){btn.disabled=false});
+    fetch(P.CONTACT_URL,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(d)}).then(function(r){return r.json().then(function(j){if(!r.ok||j.success===false||j.success==='false')throw 0;return j})}).then(function(){show('ok','¡Gracias! Recibimos tu solicitud y te contactaremos pronto.');f.reset()}).catch(function(){show('err','No pudimos enviar tu mensaje. Inténtalo de nuevo en unos minutos.')}).then(function(){btn.disabled=false});
   });
 }
 

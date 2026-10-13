@@ -8,13 +8,13 @@ window.PROINVI = {
   PRODUCTS_URL: '',  // GET  -> [{id,sku,name,cat,price,desc,stock}]
   ORDER_URL:    '',  // POST -> {folio}   (n8n DEBE recalcular precios y generar el folio)
   TRACK_URL:    '',  // GET ?folio=XXX -> {estado:0..3}
-  CONTACT_URL:  '',  // POST -> {ok:true}
+  CONTACT_URL:  'https://formsubmit.co/ajax/Daniel@proinvi.com.mx', // FormSubmit AJAX reenvía las solicitudes al correo
 
   EMPRESA: {
     nombre: 'Proinvi',
     razon: 'Proveedora Industrial Virgo, S.A. de C.V.',
     telefono: '',   // por definir
-    email: '',      // por definir
+    email: 'Daniel@proinvi.com.mx',
     direccion: '',  // por definir
     horario: ''     // por definir
   }

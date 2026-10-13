@@ -21,8 +21,11 @@
     <div class="two"><label>Correo<input name="email" type="email" required autocomplete="email"></label><label>Teléfono<input name="tel" type="tel" autocomplete="tel"></label></div>
     <label>Línea de interés<select name="interes"></select></label>
     <label>Mensaje<textarea name="mensaje" required placeholder="Material, medidas, cantidades…"></textarea></label>
-    <input name="web" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+    <input type="hidden" name="_subject" value="Nueva solicitud de cotización - Proinvi">
+    <input type="hidden" name="_template" value="table">
+    <input name="_honey" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
     <button class="btn p" type="submit" style="justify-content:center">Enviar solicitud <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button><div id="cmsg"></div>
+    <small>Al enviar, tus datos se procesan mediante FormSubmit para hacer llegar tu solicitud a Proinvi.</small>
   </form></div>
   <div class="info rv" id="ci"></div>
 </div></section>
