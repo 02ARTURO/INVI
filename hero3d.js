@@ -1,4 +1,4 @@
-/* Unión bridada 3D (Three.js r149) — reacciona al mouse y al scroll */
+/* Unión bridada 3D (Three.js r149) */
 (function(){
   var box=document.getElementById('c3d'); if(!box) return;
   var fail=function(){document.documentElement.classList.add('nogl');};
@@ -62,46 +62,30 @@
     var rod=new T.Mesh(rodG,steel);rod.position.set(x,.2,z);A.add(rod);
     var nut=new T.Mesh(hexG,dark);nut.position.set(x,-.49,z);nut.rotation.y=a+.3;B.add(nut);
   }
-  /* anillos de luz */
-  var cy=new T.MeshBasicMaterial({color:0x22d3ee,transparent:true,opacity:.85});
-  var r1=new T.Mesh(new T.TorusGeometry(2.4,.012,8,128),cy); r1.rotation.x=Math.PI/2; spin.add(r1);
-  var r2=new T.Mesh(new T.TorusGeometry(2.9,.008,8,128),new T.MeshBasicMaterial({color:0x3b8cff,transparent:true,opacity:.6})); r2.rotation.set(Math.PI/2.4,0,.4); tilt.add(r2);
-  /* partículas */
-  var N=260,pa=new Float32Array(N*3); for(i=0;i<N;i++){var r=3.3+Math.random()*3,th=Math.random()*6.283,ph=Math.acos(2*Math.random()-1);pa[i*3]=r*Math.sin(ph)*Math.cos(th);pa[i*3+1]=r*Math.cos(ph)*.8;pa[i*3+2]=r*Math.sin(ph)*Math.sin(th);}
-  var pg=new T.BufferGeometry();pg.setAttribute('position',new T.BufferAttribute(pa,3));
-  var pts=new T.Points(pg,new T.PointsMaterial({color:0x7fd8ff,size:.035,transparent:true,opacity:.7,depthWrite:false})); scene.add(pts);
   /* luces */
-  var l1=new T.PointLight(0x3b8cff,12,16);l1.position.set(-4,3,4);scene.add(l1);
-  var l2=new T.PointLight(0x22d3ee,9,16);l2.position.set(4,-2,3);scene.add(l2);
-  var l3=new T.DirectionalLight(0xffffff,1.1);l3.position.set(2,5,5);scene.add(l3);
-  tilt.rotation.set(.55,0,-.75);
+  var l1=new T.PointLight(0x3b8cff,5,16);l1.position.set(-4,3,4);scene.add(l1);
+  var l2=new T.PointLight(0x22d3ee,3,16);l2.position.set(4,-2,3);scene.add(l2);
+  var l3=new T.DirectionalLight(0xffffff,1.3);l3.position.set(2,5,5);scene.add(l3);
+  tilt.rotation.set(.38,0,-.5);
 
-  var mx=0,my=0,tx=0,ty=0,scr=0,gap=0,t0=performance.now(),vis=true,raf=0,sc=1;
+  var t0=performance.now(),vis=true,raf=0,sc=1;
   function size(){
     var w=box.clientWidth||600,h=box.clientHeight||600;
     renderer.setSize(w,h,false); cam.aspect=w/h;
     sc=w<700?.6:(w<1000?.75:.82); cam.position.z=w/h<.9?11:9; cam.updateProjectionMatrix();
+    if(reduce)renderer.render(scene,cam);
   }
   size(); if(window.ResizeObserver) new ResizeObserver(size).observe(box); else addEventListener('resize',size);
-  addEventListener('pointermove',function(e){mx=(e.clientX/innerWidth-.5)*2;my=(e.clientY/innerHeight-.5)*2;},{passive:true});
-  function onScroll(){var hh=box.parentElement.offsetHeight||innerHeight;scr=Math.max(0,Math.min(1,scrollY/(hh*.85)));}
-  addEventListener('scroll',onScroll,{passive:true});onScroll();
   function frame(now){
     raf=0; if(!vis||document.hidden) return;
     var t=(now-t0)/1000;
-    tx+=(mx-tx)*.06; ty+=(my-ty)*.06;
-    if(!reduce) spin.rotation.y=t*.28+scr*3.2;
-    tilt.rotation.x=.55+ty*.22+scr*.5; tilt.rotation.z=-.75+tx*.2-scr*.3;
-    tilt.position.y=Math.sin(t*.9)*.12-scr*.6; tilt.position.x=-scr*.8;
-    tilt.scale.setScalar(sc*(1-scr*.12));
-    var g=scr*1.5; gap+=(g-gap)*.1; B.position.y=gap; gasket.position.y=gap*.5; B.children.forEach(function(c){});
-    r1.rotation.z=t*.4; r2.rotation.z=.4+t*.15; pts.rotation.y=t*.03;
-    l1.position.x=-4+tx*2; l2.position.y=-2-ty*2;
+    spin.rotation.y=t*.07;
+    tilt.scale.setScalar(sc);
     renderer.render(scene,cam);
     raf=requestAnimationFrame(frame);
   }
   function start(){if(!raf)raf=requestAnimationFrame(frame);}
-  if(reduce){ spin.rotation.y=.6; renderer.render(scene,cam); addEventListener('scroll',function(){if(!raf)raf=requestAnimationFrame(function(n){raf=0;vis=true;frame(n);});},{passive:true}); }
+  if(reduce){ spin.rotation.y=.6; renderer.render(scene,cam); }
   else{
     if('IntersectionObserver' in window) new IntersectionObserver(function(es){vis=es[0].isIntersecting;if(vis)start();}).observe(box);
     document.addEventListener('visibilitychange',start); start();

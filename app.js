@@ -7,6 +7,8 @@ var page=D.body.getAttribute('data-page')||'';
 H.classList.add(P.TIENDA?'pv-tienda-on':'pv-tienda-off');
 var ARROW='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 var pend=function(v){return v?esc(v):'<span class="pend">Por definir</span>'};
+var phones=function(){return Array.isArray(E.telefonos)?E.telefonos:(E.telefono?[E.telefono]:[])};
+var phoneLink=function(number){return'<a href="tel:'+number.replace(/\D/g,'')+'">'+esc(number)+'</a>'};
 
 /* ---------- shell ---------- */
 function shell(){
@@ -22,7 +24,7 @@ function shell(){
   var f='<footer class="ftr"><div class="wrap"><div class="fg"><div><img src="images/logo-blanco.svg" alt="Proinvi"><p>'+esc(E.razon||'Proveedora Industrial Virgo, S.A. de C.V.')+'<br>Tuberías, válvulas y conexiones para el sector industrial.</p></div>'+
    '<div><h4>Productos</h4><ul>'+CATS.slice(0,5).map(function(c){return'<li><a href="producto.html?c='+c.slug+'">'+esc(c.name)+'</a></li>'}).join('')+'<li><a href="index.html#productos">Ver todas →</a></li></ul></div>'+
    '<div><h4>Empresa</h4><ul><li><a href="quienes-somos.html">Quiénes somos</a></li><li><a href="contacto.html">Contacto</a></li><li data-tienda><a href="tienda.html">Tienda en línea</a></li><li data-tienda><a href="tienda.html#seguimiento">Seguimiento de pedido</a></li></ul></div>'+
-   '<div><h4>Contacto</h4><ul><li>'+pend(E.telefono)+'</li><li>'+pend(E.email)+'</li><li>'+pend(E.direccion)+'</li></ul></div></div>'+
+   '<div><h4>Contacto</h4><ul><li><small>Teléfono</small><ul>'+phones().map(function(number){return'<li>'+phoneLink(number)+'</li>'}).join('')+'</ul></li><li><small>Correo</small><br>'+(E.email?'<a href="mailto:'+esc(E.email)+'">'+esc(E.email)+'</a>':pend(''))+'</li><li><small>Dirección</small><br>'+pend(E.direccion)+'</li></ul></div></div>'+
    '<div class="copy"><span>© '+new Date().getFullYear()+' '+esc(E.nombre||'Proinvi')+' · '+esc(E.razon||'')+'</span><span>proinvi.com.mx</span></div></div></footer>';
   D.body.insertAdjacentHTML('beforeend',f);
   var hdr=$('#hdr'),nv=$('#nav'),bg=$('#burger');
@@ -33,7 +35,6 @@ function shell(){
   db.addEventListener('click',function(e){e.stopPropagation();var o=dd.classList.toggle('open');db.setAttribute('aria-expanded',o)});
   D.addEventListener('click',function(e){if(!dd.contains(e.target)){dd.classList.remove('open');db.setAttribute('aria-expanded','false')}});
   dd.addEventListener('keydown',function(e){if(e.key==='Escape'){dd.classList.remove('open');db.focus()}});
-  if(matchMedia('(hover:hover)').matches)addEventListener('pointermove',function(e){var g=$('#glow');g.style.setProperty('--mx',e.clientX+'px');g.style.setProperty('--my',(e.clientY)+'px')},{passive:true});
 }
 
 /* ---------- efectos ---------- */
@@ -47,17 +48,6 @@ function fx(){
   $$('[data-n]').forEach(function(el){var n=+el.getAttribute('data-n'),done=0;
     var run=function(){if(done)return;done=1;if(reduce){el.textContent=n;return}var t0=performance.now();(function s(t){var p=Math.min(1,(t-t0)/1400);el.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(s)})(t0)};
     if('IntersectionObserver' in window)new IntersectionObserver(function(es,o){if(es[0].isIntersecting){run();o.disconnect()}}).observe(el);else run()});
-  if(reduce||!matchMedia('(hover:hover)').matches)return;
-  /* tilt 3D con brillo */
-  $$('.card').forEach(function(c){
-    c.addEventListener('pointermove',function(e){var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
-      c.classList.add('tilting');c.style.transform='rotateX('+((.5-y)*12)+'deg) rotateY('+((x-.5)*14)+'deg) translateZ(14px)';c.style.setProperty('--gx',x*100+'%');c.style.setProperty('--gy',y*100+'%')});
-    c.addEventListener('pointerleave',function(){c.classList.remove('tilting');c.style.transform=''})});
-  /* botones magnéticos */
-  $$('.btn.p,.nav .cta').forEach(function(b){b.addEventListener('pointermove',function(e){var r=b.getBoundingClientRect();b.style.transform='translate('+((e.clientX-r.left-r.width/2)*.18)+'px,'+((e.clientY-r.top-r.height/2)*.3)+'px)'});b.addEventListener('pointerleave',function(){b.style.transform=''})});
-  $$('.feat').forEach(function(f){f.addEventListener('pointermove',function(e){var r=f.getBoundingClientRect();f.style.setProperty('--fx',(e.clientX-r.left)+'px');f.style.setProperty('--fy',(e.clientY-r.top)+'px')})});
-  /* parallax foto producto */
-  var m=$('.gal .main');if(m){var im=$('img',m);m.addEventListener('pointermove',function(e){var r=m.getBoundingClientRect();im.style.transform='scale(1.12) translate('+(-(e.clientX-r.left-r.width/2)/r.width*24)+'px,'+(-(e.clientY-r.top-r.height/2)/r.height*24)+'px)'});m.addEventListener('pointerleave',function(){im.style.transform=''})}
 }
 
 /* ---------- inicio ---------- */
@@ -78,11 +68,42 @@ function producto(){
   var items=c.items.length?'<div class="ptitle">Incluye</div><div class="chips">'+c.items.map(function(i){return'<span>'+esc(i)+'</span>'}).join('')+'</div>':'';
   var q='contacto.html?producto='+encodeURIComponent(c.name);
   root.innerHTML='<section class="phero"><div class="wrap"><div class="crumb"><a href="index.html">Inicio</a> / <a href="index.html#productos">Productos</a> / '+esc(c.name)+'</div><div class="eyebrow">Línea de producto</div><h1>'+esc(c.name)+'</h1><p>'+esc(c.intro)+'</p></div></section>'+
-   '<section class="sec" style="padding-top:30px"><div class="wrap"><div class="pgrid"><div class="gal rv"><div class="main"><img id="gm" src="'+c.photos[0]+'" alt="'+esc(c.name)+'"></div><div class="thumbs">'+c.photos.map(function(p,i){return'<button type="button" class="'+(i?'':'on')+'" data-i="'+i+'" aria-label="Foto '+(i+1)+'"><img src="'+p+'" alt=""></button>'}).join('')+'</div></div>'+
+   '<section class="sec" style="padding-top:30px"><div class="wrap"><div class="catalog-nav"><div class="ptitle">Explora el catálogo</div><nav class="sidenav" aria-label="Categorías del catálogo">'+CATS.map(function(x){return'<a href="producto.html?c='+x.slug+'"'+(x.slug===c.slug?' class="on" aria-current="page"':'')+'>'+esc(x.name)+'</a>'}).join('')+'</nav></div><div class="pgrid"><div class="gal rv"><div class="main"><button class="main-image" id="gm-open" type="button" aria-label="Ampliar imagen de '+esc(c.name)+'"><img id="gm" src="'+c.photos[0]+'" alt="'+esc(c.name)+', foto 1"><span class="zoom-hint">Toca para ampliar</span></button><button class="gallery-arrow prev" id="photo-prev" type="button" aria-label="Foto anterior">‹</button><button class="gallery-arrow next" id="photo-next" type="button" aria-label="Foto siguiente">›</button><span class="photo-count" id="photo-count" aria-live="polite">1 / '+c.photos.length+'</span></div><div class="thumbs">'+c.photos.map(function(p,i){return'<button type="button" class="'+(i?'':'on')+'" data-i="'+i+'" aria-label="Foto '+(i+1)+'"><img src="'+p+'" alt=""></button>'}).join('')+'</div></div>'+
    '<div class="rv"><div class="ptitle">Especificaciones</div><table class="spec">'+specs+'</table>'+items+
    '<div class="cta-row"><a class="btn p" data-sin-tienda href="'+q+'">Solicitar cotización '+ARROW+'</a><a class="btn p" data-tienda href="tienda.html?cat='+c.slug+'">Comprar en línea '+ARROW+'</a><a class="btn" data-tienda href="'+q+'">Pedir cotización</a></div></div></div>'+
-   '<div class="sidenav">'+CATS.map(function(x){return'<a href="producto.html?c='+x.slug+'"'+(x.slug===c.slug?' class="on"':'')+'>'+esc(x.name)+'</a>'}).join('')+'</div></div></section>';
-  $$('.thumbs button').forEach(function(b){b.addEventListener('click',function(){$('#gm').src=c.photos[+b.dataset.i];$$('.thumbs button').forEach(function(x){x.classList.toggle('on',x===b)})})});
+   '<dialog class="photo-dialog" id="photo-dialog" aria-label="Imagen ampliada de '+esc(c.name)+'"><button class="photo-close" type="button" aria-label="Cerrar imagen">×</button><div class="photo-stage"><img id="photo-large" src="'+c.photos[0]+'" alt="'+esc(c.name)+', imagen ampliada"><button class="gallery-arrow prev" id="photo-prev-large" type="button" aria-label="Foto anterior">‹</button><button class="gallery-arrow next" id="photo-next-large" type="button" aria-label="Foto siguiente">›</button><span class="photo-count" id="photo-count-large" aria-live="polite">1 / '+c.photos.length+'</span></div></dialog></div></section>';
+  var mainImage=$('#gm'),largeImage=$('#photo-large'),dialog=$('#photo-dialog'),photoIndex=0;
+  function setPhoto(index){
+    photoIndex=(index+c.photos.length)%c.photos.length;
+    mainImage.src=c.photos[photoIndex];mainImage.alt=c.name+', foto '+(photoIndex+1);
+    largeImage.src=mainImage.src;largeImage.alt=mainImage.alt;
+    $('#photo-count').textContent=(photoIndex+1)+' / '+c.photos.length;
+    $('#photo-count-large').textContent=(photoIndex+1)+' / '+c.photos.length;
+    $$('.thumbs button').forEach(function(button,i){button.classList.toggle('on',i===photoIndex)});
+  }
+  $('#gm-open').addEventListener('click',function(){largeImage.src=mainImage.src;largeImage.alt=mainImage.alt;dialog.showModal()});
+  $('#photo-prev').addEventListener('click',function(){setPhoto(photoIndex-1)});
+  $('#photo-next').addEventListener('click',function(){setPhoto(photoIndex+1)});
+  $('#photo-prev-large').addEventListener('click',function(){setPhoto(photoIndex-1)});
+  $('#photo-next-large').addEventListener('click',function(){setPhoto(photoIndex+1)});
+  $('.photo-close',dialog).addEventListener('click',function(){dialog.close()});
+  dialog.addEventListener('click',function(e){if(e.target===dialog)dialog.close()});
+  dialog.addEventListener('keydown',function(e){
+    if(e.key==='ArrowLeft'){e.preventDefault();setPhoto(photoIndex-1)}
+    if(e.key==='ArrowRight'){e.preventDefault();setPhoto(photoIndex+1)}
+  });
+  $$('.thumbs button').forEach(function(b){b.addEventListener('click',function(){
+    setPhoto(+b.dataset.i);
+  })});
+  var activeCategory=$('.sidenav .on'),categoryNav=$('.sidenav');
+  function centerActiveCategory(){
+    if(activeCategory&&categoryNav.scrollWidth>categoryNav.clientWidth){
+      var navRect=categoryNav.getBoundingClientRect(),activeRect=activeCategory.getBoundingClientRect();
+      categoryNav.scrollLeft+=activeRect.left-navRect.left-(categoryNav.clientWidth-activeCategory.offsetWidth)/2;
+    }
+  }
+  centerActiveCategory();
+  addEventListener('resize',centerActiveCategory);
 }
 
 /* ---------- contacto ---------- */
@@ -91,7 +112,8 @@ function contacto(){
   var pr=new URLSearchParams(location.search).get('producto');
   var sel=$('[name=interes]',f);sel.innerHTML='<option value="">Selecciona (opcional)</option>'+CATS.map(function(c){return'<option>'+esc(c.name)+'</option>'}).join('');
   if(pr){sel.value=pr;if(sel.value!==pr){sel.insertAdjacentHTML('beforeend','<option>'+esc(pr)+'</option>');sel.value=pr}}
-  $('#ci').innerHTML=[['Teléfono',E.telefono],['Correo',E.email],['Dirección',E.direccion],['Horario',E.horario]].map(function(r){return'<div class="it"><div><small>'+r[0]+'</small>'+pend(r[1])+'</div></div>'}).join('');
+  var contactRows=[['Teléfono',phones().length?phones().map(phoneLink).join('<br>'):pend('')],['Correo',E.email?'<a href="mailto:'+esc(E.email)+'">'+esc(E.email)+'</a>':pend('')],['Dirección',pend(E.direccion)],['Horario',pend(E.horario)]];
+  $('#ci').innerHTML=contactRows.map(function(r){return'<div class="it"><div><small>'+r[0]+'</small>'+r[1]+'</div></div>'}).join('');
   f.addEventListener('submit',function(e){
     e.preventDefault();var out=$('#cmsg'),d={};new FormData(f).forEach(function(v,k){d[k]=v});
     if(d._honey){return} /* honeypot */
@@ -105,7 +127,7 @@ function contacto(){
         return j;
       });
     }).then(function(){show('ok','¡Gracias! Recibimos tu solicitud y te contactaremos pronto.');f.reset()}).catch(function(err){
-      var msg=err instanceof TypeError?'No se pudo conectar con el servicio de envío. Revisa la conexión e inténtalo de nuevo.':'El servicio no aceptó el mensaje ('+err.message+'). Si es el primer envío, Daniel debe confirmar el correo de activación de FormSubmit.';
+      var msg=err instanceof TypeError?'No se pudo conectar con el servicio de envío. Revisa la conexión e inténtalo de nuevo.':'El servicio no aceptó el mensaje ('+err.message+'). Si es el primer envío, gerencia@proinvi.com.mx debe confirmar el correo de activación de FormSubmit.';
       show('err',msg);
     }).then(function(){btn.disabled=false});
   });
