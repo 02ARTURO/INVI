@@ -141,11 +141,14 @@ body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opac
 .stack img:nth-child(3){width:46%;height:200px;left:12%;bottom:0;transform:rotateY(8deg) translateZ(80px)}
 .stack:hover img:nth-child(1){transform:rotateY(4deg) translate(-10px,-10px)}.stack:hover img:nth-child(2){transform:rotateY(-3deg) translate(10px,0)}.stack:hover img:nth-child(3){transform:rotateY(2deg) translate(0,12px)}
 .flips{display:grid;grid-template-columns:1fr 1fr;gap:20px;perspective:1200px}
-.flip{height:300px;position:relative;transform-style:preserve-3d;transition:transform .9s var(--ease);cursor:pointer}
+.flip{height:420px;position:relative;transform-style:preserve-3d;transition:transform .9s var(--ease);cursor:pointer}
 .flip:hover,.flip.on{transform:rotateY(180deg)}
 .flip>div{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r);padding:30px;overflow:hidden;border:1px solid var(--line)}
 .flip .f{display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(to top,rgba(5,7,13,.92),rgba(5,7,13,.25)),var(--im) center/cover}
 .flip .f h3{font-size:2rem}.flip .f small{color:var(--ac2);margin-top:6px}
+.flip .f .hov{display:none}.flip .f .tap{display:none}
+@media(hover:hover){.flip .f .hov{display:inline}}
+@media(hover:none){.flip .f .tap{display:inline}}
 .flip .b{transform:rotateY(180deg);background:linear-gradient(160deg,#0c1a36,#0a0f1c);display:flex;align-items:center;font-size:.98rem;color:#cbd5e6;overflow:auto}
 /* cta */
 .ctab{position:relative;border-radius:34px;padding:clamp(40px,7vw,90px);overflow:hidden;border:1px solid var(--line);background:linear-gradient(120deg,rgba(5,40,83,.85),rgba(5,7,13,.8)),url(images/planta-sol.jpg) center/cover;text-align:center}
