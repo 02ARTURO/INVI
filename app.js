@@ -10,7 +10,7 @@ var pend=function(v,k){if(!v||!v.length)return'<span class="pend">Por definir</s
 
 /* ---------- shell ---------- */
 function shell(){
-  var nav=[['index.html','Inicio','inicio'],['index.html#productos','Productos',''],['quienes-somos.html','Nosotros','nosotros'],['tienda.html','Tienda','tienda',1],['contacto.html','Contacto','contacto']];
+  var nav=[['index.html','Inicio','inicio'],['index.html#productos','Productos',''],['quienes-somos.html','Nosotros','nosotros'],['tienda.html','Tienda','tienda',1]];
   var h='<header class="hdr" id="hdr"><div class="wrap"><a class="logo" href="index.html" aria-label="Proinvi inicio"><img src="images/logo-icono.svg" alt="Proinvi" width="79" height="58"></a>'+
    '<nav class="nav" id="nav">'+nav.map(function(n){
      if(n[1]==='Productos')return'<div class="dd'+(page==='producto'?' on':'')+'"><a href="'+n[0]+'" class="ddl">Productos</a><button class="ddb" type="button" aria-label="Ver líneas de producto" aria-expanded="false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg></button><div class="ddm">'+CATS.map(function(c){return'<a href="producto.html?c='+c.slug+'"><img src="'+c.cover+'" alt="" loading="lazy"><span>'+esc(c.name)+'</span></a>'}).join('')+'<a class="all" href="index.html#productos">Ver todas las líneas →</a></div></div>';
