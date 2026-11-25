@@ -116,6 +116,9 @@ body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opac
 .feat:hover{transform:translateY(-8px);border-color:rgba(34,211,238,.4)}
 .feat:before{content:"";position:absolute;inset:-1px;background:radial-gradient(300px circle at var(--fx,50%) var(--fy,0%),rgba(59,140,255,.18),transparent 60%);opacity:0;transition:.3s}
 .feat:hover:before{opacity:1}
+.feat.g1{background:linear-gradient(160deg,#0a1830,var(--panel))}
+.feat.g2{background:linear-gradient(160deg,var(--navy),var(--panel))}
+.feat.g3{background:linear-gradient(160deg,var(--navy2),var(--panel))}
 .feat svg{width:46px;height:46px;color:var(--ac2);margin-bottom:22px;position:relative}
 .feat h3{font-size:1.25rem;margin-bottom:10px;position:relative}.feat p{color:var(--mu);position:relative}
 /* split / about */
