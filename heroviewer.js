@@ -5,9 +5,20 @@ import * as THREE from './vendor/three.module.js';
 import { GLTFLoader } from './vendor/GLTFLoader.js';
 
 const GLB_URL = 'media/hero-valve.glb';
-const H = document.documentElement;
-const box = document.getElementById('c3d');
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const GLB_LOAD_TIMEOUT_MS = 9000;
+const H = typeof document !== 'undefined' ? document.documentElement : null;
+const box = typeof document !== 'undefined' ? document.getElementById('c3d') : null;
+const reduce = typeof matchMedia !== 'undefined' ? matchMedia('(prefers-reduced-motion: reduce)').matches : false;
+
+export function withTimeout(promise, ms) {
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error('timeout')), ms);
+    promise.then(
+      (v) => { clearTimeout(t); resolve(v); },
+      (e) => { clearTimeout(t); reject(e); }
+    );
+  });
+}
 
 function createRenderer(box) {
   try {
@@ -60,7 +71,7 @@ let sc = 1;
 let drag = false, lx = 0, ly = 0, vx = 0, vy = 0, pid = null;
 let scr = 0, gap = 0, vis = true, raf = 0, last = 0;
 let specTimer = null;
-const specEl = document.querySelector('.hero-spec');
+const specEl = typeof document !== 'undefined' ? document.querySelector('.hero-spec') : null;
 const AX = new THREE.Vector3(1, 0, 0);
 const AY = new THREE.Vector3(0, 1, 0);
 const qa = new THREE.Quaternion();
@@ -182,7 +193,7 @@ function init() {
   }
   ({ renderer, scene, camera } = created);
 
-  loadHeroModel(GLB_URL).then((loadedModel) => {
+  withTimeout(loadHeroModel(GLB_URL), GLB_LOAD_TIMEOUT_MS).then((loadedModel) => {
     model = loadedModel;
     scene.add(model);
     buildStudioEnvironment(renderer, scene);
@@ -197,4 +208,4 @@ function init() {
   });
 }
 
-init();
+if (typeof document !== 'undefined') init();
