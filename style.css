@@ -191,7 +191,11 @@ input:focus,textarea:focus,select:focus{outline:0;border-color:var(--ac);backgro
 .form.industrial input:focus,.form.industrial textarea:focus,.form.industrial select:focus{outline:0;border-color:var(--ac2);box-shadow:0 0 0 3px rgba(34,211,238,.18);background:rgba(34,211,238,.06)}
 select option{background:#0a0f1c}textarea{min-height:130px;resize:vertical}
 .box{padding:clamp(24px,4vw,40px);border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
-.info{display:grid;gap:14px}.info .it{display:flex;gap:16px;padding:20px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
+.cgrid{display:grid;grid-template-columns:.9fr 1.1fr 1.2fr;gap:24px;align-items:start}
+.mapbox{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);min-height:420px;height:100%}
+.mapbox iframe{width:100%;height:100%;min-height:420px;border:0;display:block}
+.info{display:grid;gap:14px}.info .it{display:flex;gap:16px;align-items:flex-start;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(160deg,var(--navy2),var(--panel) 70%)}
+@media(max-width:960px){.cgrid{grid-template-columns:1fr}}
 .info .it svg{width:26px;height:26px;color:var(--ac2);flex:none}.info small{color:var(--mu);display:block}
 .pend{color:var(--mu);font-style:italic}
 .note{padding:14px 18px;border-radius:14px;font-size:.9rem;margin-top:14px;border:1px solid}
