@@ -7,6 +7,7 @@ import { GLTFLoader } from './vendor/GLTFLoader.js';
 const GLB_URL = 'media/hero-valve.glb';
 const H = document.documentElement;
 const box = document.getElementById('c3d');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function createRenderer(box) {
   try {
@@ -56,8 +57,26 @@ function loadHeroModel(url) {
 
 let renderer, scene, camera, model;
 let sc = 1;
+let drag = false, lx = 0, ly = 0, vx = 0, vy = 0, pid = null;
+let scr = 0, gap = 0, vis = true, raf = 0, last = 0;
+const AX = new THREE.Vector3(1, 0, 0);
+const AY = new THREE.Vector3(0, 1, 0);
+const qa = new THREE.Quaternion();
+
+function rot(dx, dy) {
+  qa.setFromAxisAngle(AY, dx);
+  model.quaternion.premultiply(qa);
+  if (dy) {
+    qa.setFromAxisAngle(AX, dy);
+    model.quaternion.premultiply(qa);
+  }
+}
 
 function render() {
+  gap += (scr - gap) * 0.12;
+  model.scale.setScalar(sc * (1 - scr * 0.1));
+  model.position.y = -scr * 0.5;
+  model.position.x = -scr * 0.7;
   renderer.render(scene, camera);
 }
 
@@ -69,8 +88,86 @@ function size() {
   sc = w < 700 ? 0.52 : (w < 1000 ? 0.62 : 0.68);
   camera.position.z = w / h < 0.9 ? 11.5 : 10;
   camera.updateProjectionMatrix();
-  if (model) model.scale.setScalar(sc);
+  if (reduce) render();
+}
+
+function onScroll() {
+  const hh = box.parentElement.offsetHeight || innerHeight;
+  scr = Math.max(0, Math.min(1, scrollY / (hh * 0.85)));
+}
+
+function frame(now) {
+  raf = 0;
+  if (!vis || document.hidden) return;
+  const dt = Math.min(0.05, (now - last) / 1000);
+  last = now;
+  if (!drag) {
+    if (Math.abs(vx) > 1e-4 || Math.abs(vy) > 1e-4) {
+      rot(vx, vy);
+      vx *= 0.94;
+      vy *= 0.94;
+    } else if (!reduce) {
+      rot(dt * 0.45, 0);
+    }
+  }
   render();
+  raf = requestAnimationFrame(frame);
+}
+
+function start() {
+  if (!raf) {
+    last = performance.now();
+    raf = requestAnimationFrame(frame);
+  }
+}
+
+function wireInteraction() {
+  box.style.touchAction = 'pan-y';
+  box.style.cursor = 'grab';
+  box.addEventListener('pointerdown', (e) => {
+    drag = true;
+    pid = e.pointerId;
+    lx = e.clientX;
+    ly = e.clientY;
+    vx = vy = 0;
+    box.style.cursor = 'grabbing';
+    try { box.setPointerCapture(pid); } catch (_) {}
+  });
+  box.addEventListener('pointermove', (e) => {
+    if (!drag || e.pointerId !== pid) return;
+    const dx = (e.clientX - lx) * 0.009;
+    const dy = e.pointerType === 'touch' ? 0 : (e.clientY - ly) * 0.009;
+    lx = e.clientX;
+    ly = e.clientY;
+    vx = dx;
+    vy = dy;
+    rot(dx, dy);
+    if (reduce || !raf) render();
+  });
+  const up = () => {
+    if (!drag) return;
+    drag = false;
+    box.style.cursor = 'grab';
+    try { box.releasePointerCapture(pid); } catch (_) {}
+    H.classList.add('dragged');
+  };
+  box.addEventListener('pointerup', up);
+  box.addEventListener('pointercancel', up);
+  box.addEventListener('lostpointercapture', () => { drag = false; box.style.cursor = 'grab'; });
+
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  if (reduce) {
+    render();
+    addEventListener('scroll', () => requestAnimationFrame(render), { passive: true });
+  } else {
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((es) => { vis = es[0].isIntersecting; if (vis) start(); }).observe(box);
+    }
+    document.addEventListener('visibilitychange', start);
+    start();
+  }
 }
 
 function init() {
@@ -88,6 +185,7 @@ function init() {
     size();
     if (window.ResizeObserver) new ResizeObserver(size).observe(box);
     else addEventListener('resize', size);
+    wireInteraction();
     H.classList.add('glready');
   }).catch(() => {
     H.classList.add('nogl');
