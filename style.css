@@ -47,9 +47,7 @@ body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opac
 /* hero */
 .hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:center;padding:110px 0 70px;overflow:hidden}
 .hero .bgimg{position:absolute;inset:0;background:url(images/planta-bn.jpg) center/cover;opacity:.16;mix-blend-mode:luminosity;mask-image:linear-gradient(90deg,#000,transparent 80%);-webkit-mask-image:linear-gradient(90deg,#000,transparent 80%)}
-#c3d{display:none}.v3d #c3d{display:block}
-.hv{position:absolute;right:-1%;top:50%;transform:translateY(-50%);width:60%;aspect-ratio:900/692;z-index:1;cursor:grab;touch-action:pan-y;mix-blend-mode:lighten;-webkit-mask-image:radial-gradient(ellipse 52% 54% at 50% 50%,#000 55%,transparent 100%);mask-image:radial-gradient(ellipse 52% 54% at 50% 50%,#000 55%,transparent 100%);user-select:none;-webkit-user-select:none}
-.hv.grab{cursor:grabbing}.hv video{width:100%;height:100%;display:block;object-fit:cover;pointer-events:none}
+#c3d{display:block}
 #c3d{touch-action:pan-y;position:absolute;right:-4%;top:0;width:62%;height:100%;z-index:1}
 #c3d canvas{display:block;width:100%!important;height:100%!important}
 .hero .fallback{position:absolute;right:6%;top:50%;transform:translateY(-50%);width:42%;border-radius:30px;display:none;z-index:1;box-shadow:0 40px 100px -30px rgba(59,140,255,.5)}
@@ -220,7 +218,6 @@ select option{background:#0a0f1c}textarea{min-height:130px;resize:vertical}
  .dd:hover .ddm,.dd:focus-within .ddm{display:none}.dd.open .ddm{display:grid}
  .dd:before{display:none}.burger{display:block;z-index:60;position:relative}
  .burger.on span:nth-child(1){transform:translateY(8px) rotate(45deg)}.burger.on span:nth-child(2){opacity:0}.burger.on span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
- .hv{width:100%;right:0;top:auto;bottom:0;transform:none}
  .hero{padding-top:100px;align-items:flex-start}#c3d{width:100%;right:0;top:auto;bottom:0;height:52%;opacity:.95}.hero-t{padding-bottom:42vh}
  .hero .fallback{width:70%;right:15%;top:auto;bottom:6%;transform:none}
  .scroll-h{display:none}.drag-h{right:50%;transform:translateX(50%);bottom:14px;white-space:nowrap}
