@@ -43,7 +43,7 @@ body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opac
 .btn:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.08)}
 .btn.p{background:linear-gradient(135deg,var(--ac),var(--ac3));border-color:transparent;box-shadow:0 10px 40px -10px rgba(59,140,255,.7)}
 .btn.p:hover{box-shadow:0 14px 50px -8px rgba(59,140,255,.95);filter:brightness(1.1)}
-.btn.warm{background:linear-gradient(135deg,var(--warm),var(--warm2));border-color:transparent;box-shadow:0 10px 40px -10px rgba(239,68,68,.5)}
+.btn.warm{background:linear-gradient(135deg,var(--warm),var(--warm2));border-color:transparent;color:var(--bg);box-shadow:0 10px 40px -10px rgba(239,68,68,.5)}
 .btn.warm:hover{box-shadow:0 14px 50px -8px rgba(239,68,68,.75);filter:brightness(1.1)}
 .btn svg{width:18px;height:18px}
 /* hero */
