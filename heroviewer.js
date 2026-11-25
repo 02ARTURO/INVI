@@ -98,7 +98,7 @@ function size() {
   const h = box.clientHeight || 600;
   renderer.setSize(w, h, false);
   camera.aspect = w / h;
-  sc = w < 700 ? 0.52 : (w < 1000 ? 0.62 : 0.68);
+  sc = w < 700 ? 0.78 : (w < 1000 ? 0.9 : 1.0);
   camera.position.z = w / h < 0.9 ? 11.5 : 10;
   camera.updateProjectionMatrix();
   if (reduce) render();
