@@ -59,6 +59,8 @@ let renderer, scene, camera, model;
 let sc = 1;
 let drag = false, lx = 0, ly = 0, vx = 0, vy = 0, pid = null;
 let scr = 0, gap = 0, vis = true, raf = 0, last = 0;
+let specTimer = null;
+const specEl = document.querySelector('.hero-spec');
 const AX = new THREE.Vector3(1, 0, 0);
 const AY = new THREE.Vector3(0, 1, 0);
 const qa = new THREE.Quaternion();
@@ -132,6 +134,8 @@ function wireInteraction() {
     vx = vy = 0;
     box.style.cursor = 'grabbing';
     try { box.setPointerCapture(pid); } catch (_) {}
+    clearTimeout(specTimer);
+    if (specEl) specEl.classList.remove('show');
   });
   box.addEventListener('pointermove', (e) => {
     if (!drag || e.pointerId !== pid) return;
@@ -187,6 +191,7 @@ function init() {
     else addEventListener('resize', size);
     wireInteraction();
     H.classList.add('glready');
+    if (specEl && !drag) specTimer = setTimeout(() => specEl.classList.add('show'), 2500);
   }).catch(() => {
     H.classList.add('nogl');
   });

@@ -58,6 +58,9 @@ body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opac
 .drag-h{position:absolute;right:6%;bottom:34px;z-index:3;display:none;align-items:center;gap:8px;font-size:.82rem;color:var(--mu);background:rgba(5,7,13,.55);border:1px solid var(--line);padding:7px 14px;border-radius:99px;backdrop-filter:blur(8px);pointer-events:none;transition:opacity .5s}
 .glready .drag-h{display:inline-flex}.dragged .drag-h{opacity:0}
 @keyframes spinic{to{transform:rotate(360deg)}}.drag-h b{display:inline-block;animation:spinic 3s linear infinite}
+.hero-spec{position:absolute;right:6%;bottom:84px;z-index:3;display:flex;flex-direction:column;gap:2px;font-size:.78rem;color:var(--mu);background:rgba(5,7,13,.55);border:1px solid var(--line);padding:9px 16px;border-radius:14px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);pointer-events:none;opacity:0;transition:opacity .6s}
+.hero-spec b{color:#fff;font-size:.88rem;font-weight:600}
+.hero-spec.show{opacity:1}
 .hero-t{max-width:620px}
 .pill{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--panel);padding:7px 16px;border-radius:99px;font-size:.84rem;color:var(--mu);margin-bottom:26px}
 .pill i{width:8px;height:8px;border-radius:50%;background:var(--ac2);box-shadow:0 0 0 0 rgba(34,211,238,.7);animation:pulse 2s infinite}
