@@ -186,6 +186,8 @@ body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opac
 label{font-size:.85rem;color:var(--mu);display:grid;gap:6px}
 input,textarea,select{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;padding:14px 16px;color:var(--tx);font:inherit;transition:.2s}
 input:focus,textarea:focus,select:focus{outline:0;border-color:var(--ac);background:rgba(59,140,255,.07)}
+.form.industrial input,.form.industrial textarea,.form.industrial select{border:1px solid rgba(34,211,238,.35)}
+.form.industrial input:focus,.form.industrial textarea:focus,.form.industrial select:focus{outline:0;border-color:var(--ac2);box-shadow:0 0 0 3px rgba(34,211,238,.18);background:rgba(34,211,238,.06)}
 select option{background:#0a0f1c}textarea{min-height:130px;resize:vertical}
 .box{padding:clamp(24px,4vw,40px);border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
 .info{display:grid;gap:14px}.info .it{display:flex;gap:16px;padding:20px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}
