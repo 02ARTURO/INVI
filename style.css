@@ -141,7 +141,7 @@ body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opac
 .stack:hover img:nth-child(1){transform:rotateY(4deg) translate(-10px,-10px)}.stack:hover img:nth-child(2){transform:rotateY(-3deg) translate(10px,0)}.stack:hover img:nth-child(3){transform:rotateY(2deg) translate(0,12px)}
 .flips{display:grid;grid-template-columns:1fr 1fr;gap:20px;perspective:1200px}
 .flip{height:420px;position:relative;transform-style:preserve-3d;transition:transform .9s var(--ease);cursor:pointer}
-.flip:hover,.flip.on{transform:rotateY(180deg)}
+.flip.on{transform:rotateY(180deg)}
 .flip>div{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--r);padding:30px;overflow:hidden;border:1px solid var(--line)}
 .flip .f{display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(to top,rgba(5,7,13,.92),rgba(5,7,13,.25)),var(--im) center/cover}
 .flip .f h3{font-size:2rem}.flip .f small{color:var(--ac2);margin-top:6px}
@@ -235,8 +235,9 @@ select option{background:#0a0f1c}textarea{min-height:130px;resize:vertical}
 .pv-tienda-off [data-tienda]{display:none!important}.pv-tienda-on [data-sin-tienda]{display:none!important}
 /* responsive */
 @media(max-width:960px){
- .nav{position:fixed;top:0;right:0;bottom:0;width:min(320px,86%);background:#0a0f1c;flex-direction:column;align-items:stretch;padding:90px 22px 30px;transform:translateX(105%);transition:.4s var(--ease);border-left:1px solid var(--line);gap:4px}
- .nav.on{transform:none;overflow:auto}.nav a{padding:14px;font-size:1.05rem}
+ .hdr.sc{backdrop-filter:none;-webkit-backdrop-filter:none}
+ .nav{position:fixed;top:0;right:0;bottom:0;width:min(380px,100%);max-height:100vh;max-height:100dvh;overflow-y:auto;overscroll-behavior:contain;background:#0a0f1c;flex-direction:column;align-items:stretch;padding:calc(90px + env(safe-area-inset-top)) 22px calc(30px + env(safe-area-inset-bottom));transform:translateX(105%);transition:.4s var(--ease);border-left:1px solid var(--line);gap:4px}
+ .nav.on{transform:none}.nav a{padding:14px;font-size:1.05rem}
  .dd{flex-wrap:wrap}.dd .ddl{flex:1}.ddb{width:48px;height:48px}.dd:hover .ddb svg{transform:none}.dd.open .ddb svg{transform:rotate(180deg)}
  .ddm{position:static;transform:none!important;width:100%;opacity:1;visibility:visible;display:none;grid-template-columns:1fr;background:rgba(255,255,255,.03);box-shadow:none;border-radius:14px;padding:6px;margin-bottom:6px}
  .dd:hover .ddm,.dd:focus-within .ddm{display:none}.dd.open .ddm{display:grid}
